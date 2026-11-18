@@ -180,8 +180,8 @@ footer{text-align:center;color:var(--muted);font-size:13px;margin:30px 0 10px}
   <div class="big">✅</div>
   <h2>وصلنا طلبك!</h2>
   <p id="doneId"></p>
-  <p>بنتواصل معك قريباً لتأكيد الموعد.</p>
-  <a class="wa" id="waLink" target="_blank" rel="noopener">أرسل نسخة على واتساب</a>
+  <p>الحين بنفتح لك <b>واتساب</b> والطلب مكتوب جاهز…<br>اضغط <b>إرسال</b> عشان نأكد لك الموعد بسرعة.</p>
+  <a class="wa" id="waLink">إذا ما انفتح، اضغط هنا</a>
 </section>
 
 <div class="bar" id="bar">
@@ -413,8 +413,11 @@ function showDone(o, id){
   $("app").style.display = "none"; $("bar").style.display = "none";
   $("done").style.display = "block";
   $("doneId").textContent = id ? `رقم طلبك: ${id}` : "";
-  $("waLink").href = `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(waText(o, id))}`;
+  const wa = `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(waText(o, id))}`;
+  $("waLink").href = wa;
   window.scrollTo(0,0);
+  // تحويل العميل تلقائياً للواتساب والرسالة جاهزة، وما عليه إلا يضغط إرسال
+  setTimeout(() => { window.location.href = wa; }, 1800);
 }
 $("submit").addEventListener("click", async () => {
   if (state.sending) return;
@@ -429,7 +432,6 @@ $("submit").addEventListener("click", async () => {
     return;
   }
   if (!CONFIG.ENDPOINT){ // وضع واتساب فقط
-    window.open(`https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(waText(o))}`, "_blank");
     showDone(o, ""); return;
   }
   state.sending = true; $("submit").disabled = true; $("submit").textContent = "جاري الإرسال…";
